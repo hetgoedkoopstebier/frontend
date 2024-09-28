@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Het Goedkoopste Bier</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 20px;
+            }
+            
+            .w3-content{max-width:980px;margin:auto}.w3-rest{overflow:hidden}
+            .w3-container,.w3-panel{padding:0.01em 16px}.w3-panel{margin-top:16px;margin-bottom:16px}
+            .w3-container:after,.w3-container:before,.w3-panel:after,.w3-panel:before,.w3-row:after,.w3-row:before,
+            .w3-hoverable tbody tr:hover,.w3-ul.w3-hoverable li:hover{background-color:#ccc}.w3-centered tr th,.w3-centered tr td{text-align:center}
+            .w3-left-align{text-align:left!important}.w3-right-align{text-align:right!important}.w3-justify{text-align:justify!important}.w3-center{text-align:center!important}
+            .w3-light-grey,.w3-hover-light-grey:hover,.w3-light-gray,.w3-hover-light-gray:hover{color:#000!important;background-color:#f1f1f1!important}
+            .w3-ul{list-style-type:none;padding:0;margin:0}.w3-ul li{padding:0px 16px}.w3-ul
+            .w3-center{text-align:center!important}
+            .w3-padding-64{padding-top:64px!important;padding-bottom:64px!important}
+            
+            .filter-container {
+                display: flex;
+                justify-content: center;
+                margin-bottom: 20px;
+                position: relative;
+            }
+            
+            .filter-list {
+                width: 200px;
+            }
+            
+            .filter-list:first-child {
+                margin-left: 120px;
+                margin-right: 40px;
+            }
+            .filter-list:last-child {
+                margin-left: 40px;
+            }
+            
+            ul {
+                list-style: none;
+                padding: 0;
+            }
+            
+            ul li {
+                margin: 0px 0;
+            }
+            
+            .table-container {
+                margin-top: 20px;
+            }
+            
+            table {
+                width: 500px;
+                border-collapse: collapse;
+                border-left: 1px solid black;
+                border-top: 1px solid black;
+             }
+            
+            table, th, td {
+                outline: 1px solid black
+                border-bottom: 1px solid black;
+                border-right: 1px solid black;
+            }
+            
+            th, td {
+                padding: 8px;
+                text-align: left;
+            }
+            
+            th {
+                background-color: #f2f2f2;
+            }
+        </style>
+    </head>
+    
+    <body>
+        <div class="w3-content" style="max-width: 2000px; padding-top: 0px;" id="hetgoedkoopstebier">
+            
+            <div>
+                <div class="w3-container w3-content w3-padding-64" style="max-width:800px">
+                    <h2 class="w3-wide w3-center caps">Het Goedkoopste Bier</h2>
+                    <p class="w3-opacity w3-center">Welk bier is op dit moment het goedkoopst bij welke supermarkt?</p>
+                    
+                    <div class="filter-container">
+                        
+                        <div class="filter-list">
+                            <h3>Winkel</h3>
+                            <ul id="shop_list">
+                                <li><label><input type="checkbox" @change="switch_after_select_all('shop')" checked="checked" id="selectAll_shops"> Select All</label></li>
+                                <li v-for="shop_name in uniqueShops"><label><input type="checkbox" @change="switch_after_regular('shop')" checked="checked" :value="shop_name"> {{ shop_name }}</label></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="filter-list">
+                            <h3>Biermerk</h3>
+                            <ul id="brand_list">
+                                <li><label><input type="checkbox" @change="switch_after_select_all('brand')" checked="checked" id="selectAll_brands"> Select All</label></li>
+                                <li v-for="brand_name in uniqueBrands"><label><input type="checkbox" @change="switch_after_regular('brand')" checked="checked" :value="brand_name"> {{ brand_name }}</label></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="filter-list">
+                            <h3>Blik/fles</h3>
+                            <ul id="container_list">
+                                <li><label><input type="checkbox" @change="switch_after_select_all('container')" checked="checked" id="selectAll_containers"> Select All</label></li>
+                                <li v-for="container_type in uniqueContainers"><label><input type="checkbox" @change="switch_after_regular('container')" checked="checked" :value="container_type"> {{ container_type }}</label></li>
+                            </ul>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            
+            <div class="w3-light-gray" style="width: 100%;">
+                <div class="w3-container w3-content w3-padding-64" style="max-width: 800px">
+                
+                    <ul id="fulltable" class="w3-ul w3-card-4 w3-light-gray w3-hoverable">
+                        <li class="w3-bar">
+                            <table id="headertable" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 80px">Winkel</th>
+                                        <th style="width: 120px">Product</th>
+                                        <th style="width: 60px">Prijs product
+                                        <th style="width: 60px">Prijs per liter</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </li>
+                        
+                        <li v-for="beer_row in beer_data" class="w3-bar">
+                            <table id="mytable" style="width: 100%;">
+                                <tr :data-category-shop="beer_row.shop_name" :data-category-brand="beer_row.brand_name" :data-category-container="beer_row.container_type" >
+                                    
+                                    <td style="width: 80px">
+                                        <img :src="'./img/' + beer_row.shop_name + '.ico'" class="w3-circle" style="width: 60px">
+                                    </td>
+                                    
+                                    <td style="width: 120px">
+                                        <a :href="beer_row.link" target="_blank"> {{ beer_row.product_name }}</a>
+                                    </td>
+                                    
+                                    <td class="w3-xlarge w3-right-align" style="width: 60px;">
+                                        {{ parseFloat(beer_row.price_in_euro_excl_deposit).toFixed(2) }}
+                                    </td>
+                                    
+                                    <td class="w3-xlarge w3-right-align" style="width: 60px;">
+                                        {{ parseFloat(beer_row.price_in_euro_per_liter_excl_deposit).toFixed(2) }}
+                                    </td>
+                                    
+                                </tr>
+                            </table>
+                        </li>
+                        
+                        <li>
+                            <table style="width: 100%; border-left: 0px; border-right: 0px;">
+                                <tr>
+                                    <td style="border-right: 0px;"></td>
+                                </tr>
+                            </table>
+                        </li>
+                    </ul>
+                </div>
+            
+            </div>
+        
+        </div>
+        
+        
+        <script>
+            
+            new Vue({
+                el: '#hetgoedkoopstebier',
+                data: {
+                    beer_data: []  // Initially, users array is empty
+                },
+                computed: {
+                    uniqueShops() {
+                        const shops = this.beer_data.map(row => row.shop_name);
+                        return [...new Set(shops)].sort();
+                    },
+                    uniqueBrands() {
+                        const brands = this.beer_data.map(row => row.brand_name);
+                        return [...new Set(brands)].sort();
+                    },
+                    uniqueContainers() {
+                        const containers = this.beer_data.map(row => row.container_type);
+                        return [...new Set(containers)].sort();
+                    },
+                },
+                mounted() {
+                    
+                    // Fetch the JSON file when the component is mounted
+                    fetch('https://raw.githubusercontent.com/hetgoedkoopstebier/data/main/beer.json')
+                        .then(response => response.json())
+                        .then(data => {
+                            this.beer_data = data;
+                        })
+                        .catch(error => {
+                            console.error('Error fetching JSON:', error);
+                        });
+                        
+                },
+                methods:
+                {
+                    
+                    filterTable() {
+                        
+                            const selectedShop = Array.from(document.querySelectorAll('#shop_list input[type="checkbox"]:checked'))
+                                .filter(cb => cb.value) // Filter out checkboxes without a value (e.g., the "Select All")
+                                .map(cb => cb.value);
+                            const selectedBrand = Array.from(document.querySelectorAll('#brand_list input[type="checkbox"]:checked'))
+                                .filter(cb => cb.value)
+                                .map(cb => cb.value);
+                            const selectedContainer = Array.from(document.querySelectorAll('#container_list input[type="checkbox"]:checked'))
+                                .filter(cb => cb.value)
+                                .map(cb => cb.value);
+                            
+                            
+                            const rows = document.querySelectorAll('#mytable tbody tr');
+                            
+                            for (let row of rows) {
+                                
+                                const shop_list = row.getAttribute('data-category-shop');
+                                const brand_list = row.getAttribute('data-category-brand');
+                                const container_list = row.getAttribute('data-category-container');
+                                const matchesShop = selectedShop.includes(shop_list);
+                                const matchesBrand = selectedBrand.includes(brand_list);
+                                const matchesContainer = selectedContainer.includes(container_list)
+                                
+                                if (selectedShop.length === 0 && selectedBrand.length === 0 && selectedContainer.length === 0) {
+                                    row.style.display = 'none'; // Hide all rows if no checkboxes are selected
+                                } else if (matchesShop && matchesBrand && matchesContainer) {
+                                    row.style.display = 'table-row'; // Show row if it matches both filters
+                                } else {
+                                    row.style.display = 'none'; // Hide row if it doesn't match
+                                }
+                            };
+                    },
+                    
+                    switch_after_select_all(which_filter) {
+                        var ref = this
+                        
+                        const thisCheckBox = document.querySelectorAll(`#selectAll_${which_filter}s`);
+                        const allCheckboxes = document.querySelectorAll(`#${which_filter}_list input[type="checkbox"]:not(#selectAll_${which_filter}s)`);
+                        allCheckboxes.forEach(cb => cb.checked = thisCheckBox[0].checked);
+                        
+                        ref.filterTable();
+                        
+                    },
+                    switch_after_regular(which_filter) {
+                        var ref = this
+                        
+                        const allCheckboxes = document.querySelectorAll(`#${which_filter}_list input[type="checkbox"]:not(#selectAll_${which_filter}s)`);
+                        const allChecked = Array.from(allCheckboxes).every(cb => cb.checked);
+                        document.getElementById(`selectAll_${which_filter}s`).checked = allChecked;
+                        
+                        ref.filterTable()
+                    }
+                    
+                }
+            });
+            
+        </script>
+    </body>
+</html>
