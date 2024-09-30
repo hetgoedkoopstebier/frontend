@@ -6,38 +6,15 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
         <style>
+            
             body {
                 font-family: Arial, sans-serif;
-                margin: 20px;
             }
-            
-            .w3-content{max-width:980px;margin:auto}.w3-rest{overflow:hidden}
-            .w3-container,.w3-panel{padding:0.01em 16px}.w3-panel{margin-top:16px;margin-bottom:16px}
-            .w3-container:after,.w3-container:before,.w3-panel:after,.w3-panel:before,.w3-row:after,.w3-row:before,
-            .w3-hoverable tbody tr:hover,.w3-ul.w3-hoverable li:hover{background-color:#ccc}.w3-centered tr th,.w3-centered tr td{text-align:center}
-            .w3-left-align{text-align:left!important}.w3-right-align{text-align:right!important}.w3-justify{text-align:justify!important}.w3-center{text-align:center!important}
-            .w3-light-grey,.w3-hover-light-grey:hover,.w3-light-gray,.w3-hover-light-gray:hover{color:#000!important;background-color:#f1f1f1!important}
-            .w3-ul{list-style-type:none;padding:0;margin:0}.w3-ul li{padding:0px 16px}.w3-ul
-            .w3-center{text-align:center!important}
-            .w3-padding-64{padding-top:64px!important;padding-bottom:64px!important}
             
             .filter-container {
                 display: flex;
-                justify-content: center;
-                margin-bottom: 20px;
+                justify-content: space-between;
                 position: relative;
-            }
-            
-            .filter-list {
-                width: 200px;
-            }
-            
-            .filter-list:first-child {
-                margin-left: 120px;
-                margin-right: 40px;
-            }
-            .filter-list:last-child {
-                margin-left: 40px;
             }
             
             ul {
@@ -45,47 +22,46 @@
                 padding: 0;
             }
             
-            ul li {
-                margin: 0px 0;
-            }
-            
-            .table-container {
-                margin-top: 20px;
-            }
-            
             table {
-                width: 500px;
                 border-collapse: collapse;
-             }
+            }
             
             table, th, td {
                 border-top: 1px solid black;
                 border-bottom: 1px solid black;
                 border-left: 1px solid black;
                 border-right: 1px solid black;
+                padding: 6px;
+                text-align: left;
             }
             
-            th, td {
-                padding: 8px;
-                text-align: left;
+            tr:nth-child(even) {
+                background-color: #f2f2f2;
             }
             
             th {
                 background-color: #f2f2f2;
             }
+            
+            td img { 
+                display: block;
+            }
+            
         </style>
     </head>
     
     <body>
-        <div class="w3-content" style="max-width: 2000px; padding-top: 0px;" id="hetgoedkoopstebier">
+        <div style="padding-top: 0px" id="hetgoedkoopstebier">
             
             <div>
-                <div class="w3-container w3-content w3-padding-64" style="max-width:800px">
-                    <h2 class="w3-wide w3-center caps">Het Goedkoopste Bier</h2>
-                    <p class="w3-opacity w3-center">Welk bier is op dit moment het goedkoopst bij welke supermarkt?</p>
+                <div style="padding-top:32px; padding-bottom:32px; margin:auto">
                     
-                    <div class="filter-container">
-                        
+                    <div id="header-div" style="text-align:center; width:fit-content; margin: 0 auto">
+                        <h2>Het Goedkoopste Bier</h2>
+                        <p>Prijzen zijn per liter en exclusief statiegeld!</p>
+                    </div>
+                    
+                    <div id="filters-div" class="filter-container" style=" width: 343px; height: auto; margin: 0 auto">
                         <div class="filter-list">
                             <h3>Winkel</h3>
                             <ul id="shop_list">
@@ -109,45 +85,40 @@
                                 <li v-for="container_type in uniqueContainers"><label><input type="checkbox" @change="switch_after_regular('container')" checked="checked" :value="container_type"> {{ container_type }}</label></li>
                             </ul>
                         </div>
-                        
                     </div>
-                </div>
-            </div>
-            
-            <div class="w3-light-gray" style="width: 100%;">
-                <div class="w3-container w3-content w3-padding-64" style="max-width: 800px">
                     
-                    <table id="fulltable" class="w3-ul w3-card-4 w3-light-gray w3-hoverable w3-bar" style="width: 100%;">
+                </div>
+                
+                <div style="margin:auto">
+                    
+                    <table id="fulltable" style="width: 343px!important; text-align:center; margin: 0 auto">
+                        
                         <thead>
-                            <tr>
-                                <th style="width: 80px">Winkel</th>
-                                <th style="width: 120px">Product</th>
-                                <th style="width: 60px">Prijs product</th>
-                                <th style="width: 60px">Prijs per liter</th>
+                            <tr id="tableheader" style="background-color: #f1f1f1!important; color: #000!important">
+                                <th style="width: 60px!important">Winkel</th>
+                                <th style="width: 215px!important">Product</th>
+                                <th style="width: 32px!important">€</th>
                             </tr>
                         </thead>
                         
                         <tbody>
-                            <tr v-for="beer_row in beer_data" :data-category-shop="beer_row.shop_name" :data-category-brand="beer_row.brand_name" :data-category-container="beer_row.container_type" >
+                            <tr v-for="beer_row in beer_data" :data-category-shop="beer_row.shop_name" :data-category-brand="beer_row.brand_name" :data-category-container="beer_row.container_type">
                                 
-                                <td style="width: 80px">
-                                    <img :src="'./img/' + beer_row.shop_name + '.ico'" class="w3-circle" style="width: 60px">
+                                <td style="width: 60px!important">
+                                    <img :src="'./img/' + beer_row.shop_name + '.ico'" style="width: 60px!important">
                                 </td>
                                 
-                                <td style="width: 120px">
+                                <td style="width: 215px!important">
                                     <a :href="beer_row.link" target="_blank"> {{ beer_row.product_name }}</a>
                                 </td>
                                 
-                                <td class="w3-xlarge w3-right-align" style="width: 60px;">
-                                    {{ parseFloat(beer_row.price_in_euro_excl_deposit).toFixed(2) }}
-                                </td>
-                                
-                                <td class="w3-xlarge w3-right-align" style="width: 60px;">
-                                    {{ parseFloat(beer_row.price_in_euro_per_liter_excl_deposit).toFixed(2) }}
+                                <td style="width: 32px!important">
+                                    {{ parseFloat(beer_row.price_in_euro_per_liter_excl_deposit).toFixed(2).replace('.', ',')}}
                                 </td>
                                 
                             </tr>
                         </tbody>
+                        
                     </table>
                     
                 </div>
@@ -160,7 +131,7 @@
             new Vue({
                 el: '#hetgoedkoopstebier',
                 data: {
-                    beer_data: []  // Initially, users array is empty
+                    beer_data: []
                 },
                 computed: {
                     uniqueShops() {
@@ -177,8 +148,6 @@
                     },
                 },
                 mounted() {
-                    
-                    // Fetch the JSON file when the component is mounted
                     fetch('https://raw.githubusercontent.com/hetgoedkoopstebier/data/main/beer.json')
                         .then(response => response.json())
                         .then(data => {
@@ -187,10 +156,8 @@
                         .catch(error => {
                             console.error('Error fetching JSON:', error);
                         });
-                    
                 },
-                methods:
-                {
+                methods: {
                     
                     filterTable() {
                         
@@ -207,19 +174,29 @@
                             
                             const rows = document.querySelectorAll('#fulltable tbody tr');
                             
+                            odd_element = 1;
+                            
                             for (let row of rows) {
                                 
-                                const shop_list = row.getAttribute('data-category-shop');
-                                const brand_list = row.getAttribute('data-category-brand');
-                                const container_list = row.getAttribute('data-category-container');
-                                const matchesShop = selectedShop.includes(shop_list);
-                                const matchesBrand = selectedBrand.includes(brand_list);
-                                const matchesContainer = selectedContainer.includes(container_list)
+                                const matchesShop = selectedShop.includes(row.getAttribute('data-category-shop'));
+                                const matchesBrand = selectedBrand.includes(row.getAttribute('data-category-brand'));
+                                const matchesContainer = selectedContainer.includes(row.getAttribute('data-category-container'))
                                 
                                 if (selectedShop.length === 0 && selectedBrand.length === 0 && selectedContainer.length === 0) {
                                     row.style.display = 'none'; // Hide all rows if no checkboxes are selected
                                 } else if (matchesShop && matchesBrand && matchesContainer) {
                                     row.style.display = 'table-row'; // Show row if it matches both filters
+                                    
+                                    if (odd_element == 1) {
+                                        row.style.backgroundColor = "#fff";
+                                        row.style.color = "#000";
+                                        odd_element = 0
+                                    } else {
+                                        row.style.backgroundColor = "#f1f1f1";
+                                        row.style.color = "#000";
+                                        odd_element = 1
+                                    }
+                                    
                                 } else {
                                     row.style.display = 'none'; // Hide row if it doesn't match
                                 }
