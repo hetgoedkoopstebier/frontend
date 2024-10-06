@@ -7,15 +7,83 @@
         <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
         <style>
             
-            body {
-                font-family: Arial, sans-serif;
+            html {
+                line-height: 1.5;
+                -webkit-text-size-adjust: 100%;
+                -moz-tab-size: 4;
+                -o-tab-size: 4;
+                tab-size: 4;
+                font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+                font-feature-settings: normal;
+                font-variation-settings: normal
             }
             
-            .filter-container {
+            .header-div {
+                text-align: center;
+                width: fit-content;
+                margin: 0 auto;
+                
+                padding-top:32px
+            }
+            
+            .filter-div {
                 display: flex;
                 justify-content: space-between;
                 position: relative;
+                
+                padding-top: 16px;
+                padding-bottom: 32px
             }
+            
+            .rounded-lg {
+                border-radius: 0.5rem;
+            }
+            
+            .background-grey {
+                --tw-bg-opacity: 1;
+                background-color: rgb(243 244 246 / var(--tw-bg-opacity));
+            }
+            
+            .flex-column {
+                display: flex;
+                flex-direction: column
+            }
+            
+            .drop-shadow-lg {
+                box-shadow: 0 20px 8px -8px rgb(0 0 0 / .04), 0 6px 3px -3px rgb(0 0 0 / .1)
+            }
+            
+            .background-blue {
+                --tw-bg-opacity: 1;
+                background-color: rgb(51 141 180 / var(--tw-bg-opacity));
+            }
+            
+            .text-white {
+                --tw-text-opacity: 1;
+                color: rgb(255 255 255 / var(--tw-text-opacity));
+                
+                font-size: 0.80rem;
+                line-height: 2rem;
+            }
+            
+            .round-borders {
+                border-top-left-radius: 0.5rem;
+                border-top-right-radius: 0.5rem;
+            }
+            
+            .filter-header {
+                font-weight: 400;
+                margin-left: 0.5rem;
+                margin-top: 0.3rem;
+                margin-bottom: 0.3rem
+            }
+            
+            .list-padding {
+                padding: 0.25rem;
+                margin-top: 0.5rem
+            }
+            
+            
             
             ul {
                 list-style: none;
@@ -47,83 +115,93 @@
                 display: block;
             }
             
+            .credits-div {
+                text-align: center;
+                width: fit-content;
+                margin: 0 auto;
+                
+                padding-top: 32px;
+                padding-bottom: 16px
+            }
+            
         </style>
     </head>
     
     <body>
-        <div style="padding-top: 0px" id="hetgoedkoopstebier">
+        <div id="hetgoedkoopstebier">
+              
+            <div class="header-div">
+                <h2 style="margin-bottom: 0px">Het Goedkoopste Bier</h2>
+                <p style="margin-top: 10px">Prijzen zijn per liter en exclusief statiegeld!</p>
+            </div>
             
-            <div>
-                <div style="padding-top:32px; padding-bottom:32px; margin:auto">
-                    
-                    <div id="header-div" style="text-align:center; width:fit-content; margin: 0 auto">
-                        <h2>Het Goedkoopste Bier</h2>
-                        <p>Prijzen zijn per liter en exclusief statiegeld!</p>
+            <div class="filter-div" style="width: 343px; margin: 0 auto">
+                <div class="rounded-lg background-grey flex-column drop-shadow-lg">
+                    <div class="background-blue text-white round-borders">
+                        <h2 class="filter-header">Winkel</h2>
                     </div>
-                    
-                    <div id="filters-div" class="filter-container" style=" width: 343px; height: auto; margin: 0 auto">
-                        <div class="filter-list">
-                            <h3>Winkel</h3>
-                            <ul id="shop_list">
-                                <li><label><input type="checkbox" @change="switch_after_select_all('shop')" checked="checked" id="selectAll_shops"> Select All</label></li>
-                                <li v-for="shop_name in uniqueShops"><label><input type="checkbox" @change="switch_after_regular('shop')" checked="checked" :value="shop_name"> {{ shop_name }}</label></li>
-                            </ul>
-                        </div>
-                        
-                        <div class="filter-list">
-                            <h3>Biermerk</h3>
-                            <ul id="brand_list">
-                                <li><label><input type="checkbox" @change="switch_after_select_all('brand')" checked="checked" id="selectAll_brands"> Select All</label></li>
-                                <li v-for="brand_name in uniqueBrands"><label><input type="checkbox" @change="switch_after_regular('brand')" checked="checked" :value="brand_name"> {{ brand_name }}</label></li>
-                            </ul>
-                        </div>
-                        
-                        <div class="filter-list">
-                            <h3>Blik/fles</h3>
-                            <ul id="container_list">
-                                <li><label><input type="checkbox" @change="switch_after_select_all('container')" checked="checked" id="selectAll_containers"> Select All</label></li>
-                                <li v-for="container_type in uniqueContainers"><label><input type="checkbox" @change="switch_after_regular('container')" checked="checked" :value="container_type"> {{ container_type }}</label></li>
-                            </ul>
-                        </div>
-                    </div>
-                    
+                    <ul id="shop_list" class="list-padding">
+                        <li><label><input type="checkbox" @change="switch_after_select_all('shop')" checked="checked" id="selectAll_shops"> Select All</label></li>
+                        <li v-for="shop_name in uniqueShops"><label><input type="checkbox" @change="switch_after_regular('shop')" checked="checked" :value="shop_name"> {{ shop_name }}</label></li>
+                    </ul>
                 </div>
                 
-                <div style="margin:auto">
-                    
-                    <table id="fulltable" style="width: 343px!important; text-align:center; margin: 0 auto">
-                        
-                        <thead>
-                            <tr id="tableheader" style="background-color: #f1f1f1!important; color: #000!important">
-                                <th style="width: 60px!important">Winkel</th>
-                                <th style="width: 215px!important">Product</th>
-                                <th style="width: 32px!important">€</th>
-                            </tr>
-                        </thead>
-                        
-                        <tbody>
-                            <tr v-for="beer_row in beer_data" :data-category-shop="beer_row.shop_name" :data-category-brand="beer_row.brand_name" :data-category-container="beer_row.container_type">
-                                
-                                <td style="width: 60px!important">
-                                    <img :src="'./img/' + beer_row.shop_name + '.ico'" style="width: 60px!important">
-                                </td>
-                                
-                                <td style="width: 215px!important">
-                                    <a :href="beer_row.link" target="_blank"> {{ beer_row.product_name }}</a>
-                                </td>
-                                
-                                <td style="width: 32px!important">
-                                    {{ parseFloat(beer_row.price_in_euro_per_liter_excl_deposit).toFixed(2).replace('.', ',')}}
-                                </td>
-                                
-                            </tr>
-                        </tbody>
-                        
-                    </table>
-                    
+                <div class="rounded-lg background-grey flex-column drop-shadow-lg">
+                    <div class="background-blue text-white round-borders">
+                        <h2 class="filter-header">Biermerk</h2>
+                    </div>
+                    <ul id="brand_list" class="list-padding">
+                        <li><label><input type="checkbox" @change="switch_after_select_all('brand')" checked="checked" id="selectAll_brands"> Select All</label></li>
+                        <li v-for="brand_name in uniqueBrands"><label><input type="checkbox" @change="switch_after_regular('brand')" checked="checked" :value="brand_name"> {{ brand_name }}</label></li>
+                    </ul>
+                </div>
+                
+                <div class="rounded-lg background-grey flex-column drop-shadow-lg">
+                    <div class="background-blue text-white round-borders">
+                        <h2 class="filter-header">Blik/fles</h2>
+                    </div>
+                    <ul id="container_list" class="list-padding">
+                        <li><label><input type="checkbox" @change="switch_after_select_all('container')" checked="checked" id="selectAll_containers"> Select All</label></li>
+                        <li v-for="container_type in uniqueContainers"><label><input type="checkbox" @change="switch_after_regular('container')" checked="checked" :value="container_type"> {{ container_type }}</label></li>
+                    </ul>
                 </div>
             </div>
-        
+            
+            <table id="fulltable" style="width: 343px; text-align: center; margin: 0 auto">
+                
+                <thead>
+                    <tr id="tableheader">
+                        <th style="width: 60px">Winkel</th>
+                        <th style="width: 215px">Product</th>
+                        <th style="width: 32px">€/L</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    <tr v-for="beer_row in beer_data" :data-category-shop="beer_row.shop_name" :data-category-brand="beer_row.brand_name" :data-category-container="beer_row.container_type">
+                        
+                        <td style="width: 60px">
+                            <img :src="'./img/' + beer_row.shop_name + '.ico'" style="width: 60px">
+                        </td>
+                        
+                        <td style="width: 215px">
+                            <a :href="beer_row.link" target="_blank"> {{ beer_row.product_name }}</a>
+                        </td>
+                        
+                        <td style="width: 32px">
+                            {{ parseFloat(beer_row.price_in_euro_per_liter_excl_deposit).toFixed(2).replace('.', ',')}}
+                        </td>
+                        
+                    </tr>
+                </tbody>
+                
+            </table>
+            
+            <div class="credits-div">
+                <p>Idee, backend en infrastructuur door Seb</p>
+                <p>Frontend mede mogelijk gemaakt door Boris</p>
+            </div>
+            
         </div>
         
         <script>
