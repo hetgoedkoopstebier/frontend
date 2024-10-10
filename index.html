@@ -73,7 +73,7 @@
             
             .filter-header {
                 font-weight: 400;
-                margin-left: 0.5rem;
+                margin-left: 0.3rem;
                 margin-top: 0.3rem;
                 margin-bottom: 0.3rem
             }
@@ -132,7 +132,7 @@
               
             <div class="header-div">
                 <h2 style="margin-bottom: 0px">Het Goedkoopste Bier</h2>
-                <p style="margin-top: 10px">Prijzen zijn per liter en exclusief statiegeld!</p>
+                <p style="margin-top: 10px">Prijzen zijn per liter en exclusief statiegeld!<br><a href="#" onclick="alert('Prijzen worden elke dag bijgewerkt.\nSuggesties voor nieuwe features zijn welkom!\nEmail: hetgoedkoopstebier@outlook.com'); return false;" target="_blank">Meer info</a></p>
             </div>
             
             <div class="filter-div" style="width: 343px; margin: 0 auto">
@@ -158,11 +158,11 @@
                 
                 <div class="rounded-lg background-grey flex-column drop-shadow-lg">
                     <div class="background-blue text-white round-borders">
-                        <h2 class="filter-header">Blik/fles</h2>
+                        <h2 class="filter-header">Emballage</h2>
                     </div>
                     <ul id="container_list" class="list-padding">
                         <li><label><input type="checkbox" @change="switch_after_select_all('container')" checked="checked" id="selectAll_containers"> Select All</label></li>
-                        <li v-for="container_type in uniqueContainers"><label><input type="checkbox" @change="switch_after_regular('container')" checked="checked" :value="container_type"> {{ container_type }}</label></li>
+                        <li v-for="category_type in uniqueContainers"><label><input type="checkbox" @change="switch_after_regular('container')" checked="checked" :value="category_type"> {{ category_type }}</label></li>
                     </ul>
                 </div>
             </div>
@@ -178,7 +178,7 @@
                 </thead>
                 
                 <tbody>
-                    <tr v-for="beer_row in beer_data" :data-category-shop="beer_row.shop_name" :data-category-brand="beer_row.brand_name" :data-category-container="beer_row.container_type">
+                    <tr v-for="beer_row in beer_data" :data-category-shop="beer_row.shop_name" :data-category-brand="beer_row.brand_name" :data-category-container="beer_row.category_type">
                         
                         <td style="width: 60px">
                             <img :src="'./img/' + beer_row.shop_name + '.ico'" style="width: 60px">
@@ -221,7 +221,7 @@
                         return [...new Set(brands)].sort();
                     },
                     uniqueContainers() {
-                        const containers = this.beer_data.map(row => row.container_type);
+                        const containers = this.beer_data.map(row => row.category_type);
                         return [...new Set(containers)].sort();
                     },
                 },
